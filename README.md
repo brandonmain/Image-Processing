@@ -4,4 +4,9 @@ This repository contains the folders for each project from my Image Processing c
 Though many of the processing techniques in this repository have already been written, I will be implementing my own versions of these techniques from scratch becuase it is what is asked of me by this class.
 
 ### Tools I'll be using:
-OpenCV - for reading, wrinting, and displaying images.
+OpenCV - for reading, writing, and displaying images.
+
+### Types of image formats:
+.pgm
+.ppm
+.jpeg
