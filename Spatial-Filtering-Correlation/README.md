@@ -1,1 +1,2 @@
 # Spatial Filtering: Correlation
+![]
