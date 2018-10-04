@@ -1,6 +1,6 @@
 /**
  * Basic library for displaying and writing images to file,
- * utilizes opencv2. Also includes necessary opencv libraries.
+ * utilizes opencv. Also includes necessary opencv libraries.
  * 
  * Usage:
  *      Include this header file in desired program.
