@@ -1,5 +1,16 @@
 /**
- * Basic library for reading and writing images.
+ * Basic library for displaying and writing images to file,
+ * utilizes opencv2. Also includes necessary opencv libraries.
+ * 
+ * Usage:
+ *      Include this header file in desired program.
+ *      
+ *      ex: #include "imageLib.h"
+ *      
+ * Compile:
+ *      Compile your main program with:
+ *      
+ *          g++ $(pkg-config --cflags --libs opencv) YOUR_PROGRAM.cpp -o YOUR_PROGRAM 
  */
 
 #include <opencv2/core/core.hpp>
@@ -17,24 +28,35 @@ using namespace std;
  */
 void displayIMG(const char* WINDOW, Mat &image)
 {
-    namedWindow( WINDOW, WINDOW_AUTOSIZE );// Create a WINDOW for display.
-    imshow( WINDOW, image );    // Show our image inside it.
+    // Create a window for display.
+    namedWindow( WINDOW, WINDOW_AUTOSIZE );
 
-    waitKey(0);      // Wait for a keystroke in the WINDOW
+    // Show our image inside it.
+    imshow( WINDOW, image ); 
+
+    // Wait for a keystroke in the WINDOW
+    waitKey(0);
 }
 
 /**
  * @brief      Writes an image to a file in binary (0) format
- *             for pgm images.
+ *             for pgm images. 
+ *             
+ * @reason     Sometimes images are in a Hex format when opened
+ *             in a text editor. This function can be used to
+ *             rewrite them back in an ASCII format.
+ * 
  *
  * @param[in]  FILE   The file
  * @param      image  The image
  */
 void writeIMG(const char* FILE, Mat &image)
 {
-    vector<int> compression_params;
-    compression_params.push_back(CV_IMWRITE_PXM_BINARY);
-    compression_params.push_back(0);
+    //Parameters to give to imwirte function for file writing.
+    vector<int> params;
+    params.push_back(CV_IMWRITE_PXM_BINARY);
+    params.push_back(0);
 
-    imwrite(FILE, image, compression_params);
+    //Write to give file.
+    imwrite(FILE, image, params);
 }
