@@ -23,7 +23,18 @@ void displayIMG(const char* WINDOW, Mat &image)
     waitKey(0);      // Wait for a keystroke in the WINDOW
 }
 
+/**
+ * @brief      Writes an image to a file in binary (0) format
+ *			   for pgm images.
+ *
+ * @param[in]  FILE   The file
+ * @param      image  The image
+ */
 void writeIMG(const char* FILE, Mat &image)
 {
+	vector<int> compression_params;
+    compression_params.push_back(CV_IMWRITE_PXM_BINARY);
+    compression_params.push_back(0);
 
+	imwrite(FILE, image, compression_params);
 }
