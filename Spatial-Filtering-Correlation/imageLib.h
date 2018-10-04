@@ -52,11 +52,11 @@ void displayIMG(const char* WINDOW, Mat &image)
  */
 void writeIMG(const char* FILE, Mat &image)
 {
-    //Parameters to give to imwirte function for file writing.
+    //Parameters to give to imwrite function for file writing.
     vector<int> params;
     params.push_back(CV_IMWRITE_PXM_BINARY);
     params.push_back(0);
 
-    //Write to give file.
+    //Write to given file.
     imwrite(FILE, image, params);
 }
