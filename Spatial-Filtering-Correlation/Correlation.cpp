@@ -1,10 +1,6 @@
 /**
  * Spatial Filtering (Correlation)
- * 
- * 
- *  by: Brandon Main
  *  
- *  compile with: g++ $(pkg-config --cflags --libs opencv) Correlation.cpp -o Correlation 
  */
 
 #include "imageLib.h"
