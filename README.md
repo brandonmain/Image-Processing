@@ -9,4 +9,3 @@ OpenCV - for reading, writing, and displaying images.
 ### Types of image formats:
 .pgm
 .ppm
-.jpeg
