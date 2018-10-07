@@ -8,11 +8,15 @@
  */  
 
 #include "imageLib.h"
+#include <fstream>
 
 Mat addPadding(Mat &image, const int SIZE);
 Mat crop(Mat &image, const int SIZE);
+Mat setMaskWeights(const int SIZE);
 void avg7x7(Mat &image);
 void avg15x15(Mat &image);
+void gaussian7x7(Mat &image);
+void gaussian15x15(Mat &image);
 
 
 
@@ -44,10 +48,12 @@ int main(int argc, char** argv)
 		}
 		case 3: //7x7 gaussian
 		{
+			gaussian7x7(image);
 			break;
 		}
 		case 4: //15x15 gaussian
 		{
+			gaussian15x15(image);
 			break;
 		}
 	}
@@ -155,4 +161,90 @@ void avg15x15(Mat &image)
 
 }
 
+Mat setMaskWeights(const int SIZE)
+{
+	ifstream fin;
 
+	if(SIZE == 7)
+	{
+		fin.open("7.txt");
+	}
+	else if(SIZE == 15)
+	{
+		fin.open("15.txt");
+	}
+
+	//Read file data into mask
+	Mat mask(SIZE, SIZE, CV_32F);
+
+	for (int i = 0; i < SIZE; ++i)
+	{
+		for (int j = 0; j < SIZE; ++j)
+		{
+			fin >> mask.at<float>(i,j);
+		}
+	}
+
+	//Get the sum
+	float sum = 0;
+
+	for (int i = 0; i < SIZE; ++i)
+	{
+		for (int j = 0; j < SIZE; ++j)
+		{
+			sum += mask.at<float>(i,j);
+		}
+	}
+	cout << "Sum:" << sum;
+
+
+	//Normalize
+	for (int i = 0; i < SIZE; ++i)
+	{
+		for (int j = 0; j < SIZE; ++j)
+		{
+			mask.at<float>(i,j) /= sum;
+		}
+	}
+
+	fin.close();
+
+	return mask;
+}
+void gaussian7x7(Mat &image)
+{
+	Mat padded_image(addPadding(image, 7));
+	Mat mask(setMaskWeights(7));
+	Mat averaged_image(padded_image.rows, padded_image.cols, CV_32F);
+	float sum;
+
+	//Loop over entire image
+    for (int pad_rows = 0; pad_rows < padded_image.rows; ++pad_rows)
+    {
+        for (int pad_cols = 0; pad_cols < padded_image.cols; ++pad_cols)
+        {
+            //Loop over mask
+            for (int i = 0; i < 7; ++i)
+            {
+                for (int j = 0; j < 7; ++j)
+                {
+                    sum += mask.at<float>(i,j) * padded_image.at<float>(pad_rows + i, pad_cols + j);
+                }
+            }
+            averaged_image.at<float>(pad_rows,pad_cols) = sum;
+            cout << sum << " ";
+            sum = 0;
+        }
+    }
+
+    //Mat cropped_image(crop(averaged_image, 15));
+    //displayIMG("original", image);
+    //displayIMG("Smoothed 15x15 avg", averaged_image);
+
+
+
+}
+void gaussian15x15(Mat &image)
+{
+
+}
