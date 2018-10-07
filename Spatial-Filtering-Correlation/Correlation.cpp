@@ -12,7 +12,6 @@
 
 #include "imageLib.h"
 
-void setMaskWeights(Mat &mask, Mat &image);
 Mat addPadding(Mat &mask, Mat &image);
 void correlate(Mat &mask, Mat &image);
 
@@ -27,7 +26,7 @@ int main(int argc, char** argv)
     writeIMG(argv[1], mask);
     writeIMG(argv[2], image);
 
-
+    //setMaskWeights(mask);
     //Initialize padded image
     Mat padded_image(addPadding(mask, image));
 
@@ -86,7 +85,9 @@ Mat addPadding(Mat &mask, Mat &image)
  */
 void correlate(Mat &mask, Mat &padded_image)
 {
-    int sum = 0;
+    long int sum = 0;
+    long int x = 0;
+    long int y = 0;
 
     Mat summed_image(padded_image.rows, padded_image.cols, CV_8U);
 
@@ -110,8 +111,12 @@ void correlate(Mat &mask, Mat &padded_image)
                 for (int j = 0; j < mask.cols; ++j)
                 {
                     sum += mask.at<unsigned char>(i,j) * padded_image.at<unsigned char>(pad_rows, pad_cols);
+                    //x += mask.at<unsigned char>(i,j) * mask.at<unsigned char>(i,j);
+                    //y += padded_image.at<unsigned char>(pad_rows, pad_cols) * padded_image.at<unsigned char>(pad_rows, pad_cols);
                 }
             }
+            //normalize sum
+            //sum = sum/sqrt(x * y);
             summed_image.at<unsigned char>(pad_rows,pad_cols) = sum;
             sum = 0;
         }
@@ -119,15 +124,7 @@ void correlate(Mat &mask, Mat &padded_image)
 
     writeIMG("test.pgm", summed_image);
 
-     for (int i = 0; i < summed_image.rows; ++i)
-            {
-                for (int j = 0; j < summed_image.cols; ++j)
-                {
-                    cout << summed_image.at<unsigned char>(i,j) << " ";
-                }
-            }
-
     displayIMG("img", summed_image);
-
     
 }
+
