@@ -13,6 +13,7 @@
 Mat addPadding(Mat &image, const int SIZE);
 Mat crop(Mat &image, const int SIZE);
 Mat setMaskWeights(const int SIZE);
+Mat convolve(Mat &image, Mat &filter);
 void avg7x7(Mat &image);
 void avg15x15(Mat &image);
 void gaussian7x7(Mat &image);
@@ -213,6 +214,7 @@ Mat setMaskWeights(const int SIZE)
 }
 void gaussian7x7(Mat &image)
 {
+	/*
 	Mat padded_image(addPadding(image, 7));
 	Mat mask(setMaskWeights(7));
 	Mat averaged_image(padded_image.rows, padded_image.cols, CV_32F);
@@ -241,9 +243,73 @@ void gaussian7x7(Mat &image)
     //displayIMG("original", image);
     //displayIMG("Smoothed 15x15 avg", averaged_image);
 
+*/
+	ifstream fin;
+	fin.open("7.txt");
 
+	Mat gaussian;
 
+	for(int i = 0; i < 7; i++)
+    {
+    	for(int j = 0; j < 7; j++)
+    	{
+    		fin >> gaussian.at<int>(i,j);
+    	}
+    }
+
+	Mat normalized_gaussian;
+	normalized_gaussian = gaussian/136.0;
+	/*
+    for(int i = 0; i < 7; i++)
+    {
+    	for(int j = 0; j < 7; j++)
+    	{
+    		normalized_gaussian = gaussian/136.0;
+    	}
+    }
+*/
+    Mat gaussian_7 = convolve(image, normalized_gaussian);
+
+    displayIMG("7x7", gaussian_7);
 }
+
+Mat convolve(Mat &image, Mat &filter)
+
+{// find center position of kernel (half of kernel size)
+	int imgRows = image.rows;
+	int imgCols = image.cols;
+
+	int fRows = filter.rows;
+	int fCols = filter.cols;
+
+	int fCenterX = (fRows-1) / 2;
+	int fCenterY = (fCols-1) / 2;
+
+	Mat output = image.clone();
+
+
+	for (int i=fCenterX; i<(imgRows-fCenterX); i++)
+	{
+		for (int j=fCenterY; j<(imgCols-fCenterY); j++)
+		{
+			int sum = 0;
+
+			for (int k=-fCenterX; k<(fCenterX+1); k++)
+			{
+				for (int l=-fCenterY; l<(fCenterY+1); l++)
+				{
+					sum += filter.at<double>(fCenterX+k,fCenterY+l) * image.at<uchar>(k+i,l+j);
+					sum = sum > 255 ? 255:sum;
+					sum = sum < 0 ? 0 : sum;
+				}
+			}
+
+			output.at<uchar>(i,j) = saturate_cast<uchar>(sum);
+		}
+	}
+	return output;
+}
+
 void gaussian15x15(Mat &image)
 {
 
