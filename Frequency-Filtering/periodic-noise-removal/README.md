@@ -5,4 +5,4 @@
 
 Consider the following image corrupted with 2D cosinal noise:
 
-![boy_noisy.png](boy_noisy.png)
+![boy_noisy.png](https://github.com/brandonmain/Image-Processing/blob/master/Frequency-Filtering/periodic-noise-removal/images/boy_noisy.png)
