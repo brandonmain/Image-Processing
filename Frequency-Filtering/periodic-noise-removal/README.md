@@ -27,3 +27,7 @@ Though it's hard to see, there are 4 symmetrical white dots in both of the previ
 ![filter.png](https://github.com/brandonmain/Image-Processing/blob/master/Frequency-Filtering/periodic-noise-removal/images/filter.png)
 
 The notch reject filter.
+
+Now with the filter created, the filter is then multiplied with the DFT of the original image. After performing this multiplication the Inverse-DFT is performed and we have the resulting image:
+
+![result.png](https://github.com/brandonmain/Image-Processing/blob/master/Frequency-Filtering/periodic-noise-removal/images/result.png)
