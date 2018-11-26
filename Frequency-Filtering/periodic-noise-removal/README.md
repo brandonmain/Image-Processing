@@ -1,7 +1,10 @@
 # Periodic Noise Removal
 
 #### This C++ program will remove the periodic noise that corrupts a given input image.
-<br />
+#
+Compile with: g++ $(pkg-config --cflags --libs opencv) cosine-noise.cpp -o cosine-noise
+
+Usage: ./periodic-noise-removal <IMG_PATH>
 
 Consider the following image corrupted with 2D cosinal noise:
 
