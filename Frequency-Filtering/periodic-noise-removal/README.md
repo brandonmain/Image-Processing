@@ -19,6 +19,8 @@ The image spectrum.
 
 
 <img src="https://github.com/brandonmain/Image-Processing/blob/master/Frequency-Filtering/periodic-noise-removal/images/PSD.png">
+
+
 The image PSD.
 
 
