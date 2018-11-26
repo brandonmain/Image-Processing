@@ -20,3 +20,10 @@ The image spectrum.
 ![PSD.png](https://github.com/brandonmain/Image-Processing/blob/master/Frequency-Filtering/periodic-noise-removal/images/PSD.png)
 
 The image PSD.
+
+
+Though it's hard to see, there are 4 symmetrical white dots in both of the previous images that indicate the periodic noise corrupting our image. Using the image editing program Gimp, I manually located the xy-coordinates of these ponts and created a notch reject filter around these points using code. The location of the points of interest are more apparent in the filter.
+
+![filter.png](https://github.com/brandonmain/Image-Processing/blob/master/Frequency-Filtering/periodic-noise-removal/images/filter.png)
+
+The notch reject filter.
