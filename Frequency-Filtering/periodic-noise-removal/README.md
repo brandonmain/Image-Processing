@@ -5,6 +5,7 @@
 Compile with: g++ $(pkg-config --cflags --libs opencv) cosine-noise.cpp -o cosine-noise
 
 Usage: ./periodic-noise-removal <IMG_PATH>
+#
 
 Consider the following image corrupted with 2D cosinal noise:
 
