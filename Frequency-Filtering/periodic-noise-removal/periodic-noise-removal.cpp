@@ -1,5 +1,6 @@
 /**
  * Periodic noise removal.
+ * 
  */
 
 #include <iostream>
@@ -64,6 +65,13 @@ int main(int argc, char** argv)
     return 0;
 }
 
+
+/**
+ * @brief      Shifts the quadrants of the image to the correct locations.
+ *
+ * @param[in]  inputImg   The input image
+ * @param      outputImg  The output image
+ */
 void fftshift(const Mat& inputImg, Mat& outputImg)
 {
     outputImg = inputImg.clone();
@@ -81,6 +89,16 @@ void fftshift(const Mat& inputImg, Mat& outputImg)
     q2.copyTo(q1);
     tmp.copyTo(q2);
 }
+
+/**
+ * @brief      Takes the dft of the input image and applis the
+ *             filter mask H to the image by multiplication and then
+ *             performs the inverse dft the new image.
+ *
+ * @param[in]  inputImg   The input image
+ * @param      outputImg  The output image
+ * @param[in]  H          filter mask
+ */
 void filter2DFreq(const Mat& inputImg, Mat& outputImg, const Mat& H)
 {
     Mat planes[2] = { Mat_<float>(inputImg.clone()), Mat::zeros(inputImg.size(), CV_32F) };
@@ -96,6 +114,17 @@ void filter2DFreq(const Mat& inputImg, Mat& outputImg, const Mat& H)
     split(complexIH, planes);
     outputImg = planes[0];
 }
+
+/**
+ * @brief      Creates the filter mask at the given point and 
+ *             using the input radius. This is specifically written
+ *             for periodic noise removal so it creates a mask that is
+ *             symmetrical from the given point.
+ *
+ * @param      inputOutput_H  The input output h
+ * @param[in]  center         The center
+ * @param[in]  radius         The radius
+ */
 void FilterH(Mat& inputOutput_H, Point center, int radius)
 {
     Point c2 = center, c3 = center, c4 = center;
