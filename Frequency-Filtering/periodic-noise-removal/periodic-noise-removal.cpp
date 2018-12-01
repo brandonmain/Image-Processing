@@ -16,6 +16,7 @@ void calcPSD(const Mat& inputImg, Mat& outputImg, int flag = 0);
 
 int main(int argc, char** argv)
 {
+    //Read in the image
     Mat imgIn = imread(argv[1], IMREAD_GRAYSCALE);
     if (imgIn.empty()) //check whether the image is loaded or not
     {
@@ -24,11 +25,11 @@ int main(int argc, char** argv)
     }
     imgIn.convertTo(imgIn, CV_32F);
 
-    // it needs to process even image only
+    //Make image width and height even
     Rect roi = Rect(0, 0, imgIn.cols & -2, imgIn.rows & -2);
     imgIn = imgIn(roi);
 
-    // PSD calculation (start)
+    //Power spectrum density calculation
     Mat imgPSD;
     calcPSD(imgIn, imgPSD);
     fftshift(imgPSD, imgPSD);
@@ -39,16 +40,20 @@ int main(int argc, char** argv)
 
     //Radius chosen by inspection of image spectrum.
     //Points chosen upon inspection as well.
+    //
+    //This could also be done by implementing a function to 
+    //check for large edge differences to find the spectrum peaks.
+    //
     const int radius = 2;
     FilterH(H, Point(224, 240), radius);
     FilterH(H, Point(288, 240), radius);
 
-    //Filter the image.
+    //Apply the filter to the image.
     Mat imgOut;
     fftshift(H, H);
     filter2DFreq(imgIn, imgOut, H);
 
-    // filtering (stop)
+    //Normalize resulting image and save.
     imgOut.convertTo(imgOut, CV_8U);
     normalize(imgOut, imgOut, 0, 255, NORM_MINMAX);
     imwrite("result.png", imgOut);
@@ -58,6 +63,7 @@ int main(int argc, char** argv)
     imwrite("filter.png", H);
     return 0;
 }
+
 void fftshift(const Mat& inputImg, Mat& outputImg)
 {
     outputImg = inputImg.clone();
