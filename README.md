@@ -1,8 +1,8 @@
 # Image-Processing
-This repository contains the folders for each project from my Image Processing class. Though many of the processing techniques in this repository have already been written, I will be implementing my own versions of these techniques from scratch because it is what is asked of me by this class.
+This repository contains the folders for each project from my Image Processing class. Image processing techniques inclue those from the spatial domin and those applied from the frequency domain.
 
 ### Tools I'll be using:
-OpenCV - for reading, writing, and displaying images.
+OpenCV
 
 ### Types of image formats:
 .pgm
