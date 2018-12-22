@@ -1,17 +1,20 @@
 /**
- * Motion blur
+ * Homomorphic Filtering
  */
 
 #include <iostream>
 #include <cmath>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 using namespace cv;
 using namespace std;
 
 void fftshift(const Mat& inputImg, Mat& outputImg);
 void filter2DFreq(const Mat& inputImg, Mat& outputImg, const Mat& H);
+void highpassFilter(Mat& H);
 
 int main(int argc, char** argv)
 {
@@ -26,16 +29,32 @@ int main(int argc, char** argv)
     // it needs to process even image only
     Rect roi = Rect(0, 0, imgIn.cols & -2, imgIn.rows & -2);
     imgIn = imgIn(roi);
-    imgIn = log(imgIn);
 
-    //Make the filter
+    //Apply natural log to image
+    for (int i = 0; i < imgIn.rows; ++i)
+    {
+        for (int j = 0; j < imgIn.cols; ++j)
+        {
+            imgIn.at<float>(i,j) = log(imgIn.at<float>(i,j));
+        }
+    }
+    
+    //Make highpass filter
     Mat H = Mat(roi.size(), CV_32F, Scalar(1));
-
-    normalize(H, H, 0, 255, NORM_MINMAX);
+    highpassFilter(H);
     
     Mat imgOut;
     fftshift(H, H);
     filter2DFreq(imgIn, imgOut, H);
+
+    //Take exponential of image now
+    for (int i = 0; i < imgOut.rows; ++i)
+    {
+        for (int j = 0; j < imgOut.cols; ++j)
+        {
+            imgOut.at<float>(i,j) = exp(imgOut.at<float>(i,j));
+        }
+    }
     
     // filtering (stop)
     imgOut.convertTo(imgOut, CV_8U);
@@ -44,8 +63,6 @@ int main(int argc, char** argv)
     fftshift(H, H);
     normalize(H, H, 0, 255, NORM_MINMAX);
     imwrite("filter.png", H);
-
-
 
 	return 0;
 }
@@ -81,8 +98,23 @@ void filter2DFreq(const Mat& inputImg, Mat& outputImg, const Mat& H)
     idft(complexIH, complexIH);
     split(complexIH, planes);
     outputImg = planes[0];
+    magnitude(planes[0], planes[1], outputImg);
 }
 
+void highpassFilter(Mat& H)
+{
+    float c = .5;
+    float high = 1.5;
+    float low = .5;
+
+    for (int i = 0; i < H.rows; ++i)
+    {
+        for (int j = 0; j < H.cols; ++j)
+        {
+            H.at<float>(i,j) = (high - low)*(1.0 - exp(-1.0 * c * ((((float)i - H.rows/2.0) * ((float)i - H.rows/2.0) + ((float)j - H.cols/2.0) * ((float)j - H.cols/2.0)) / (1.8 * 1.8)))) + low;
+        }
+    }
+}
 
 
 
